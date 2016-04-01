@@ -1,0 +1,22 @@
+setwd("/Users/carmincovarrubias/Dropbox/R-Script/")
+install.packages("R.cache")
+library(R.cache)
+
+
+#reads csv file of new data
+d <- read.csv(file = "Addresses.csv", sep = ",", stringsAsFactors = FALSE)
+
+#translates addreseses to lat/longs and slows geocoding with Sys.sleep
+slow <- function(d) {
+  latlong <- data.frame(matrix(ncol = 2, nrow = nrow(d)))
+  setNames(latlong, c("lon", "lat"))
+  for(i in nrow(d)) {
+    l <- geocode(d$Addresses[i])
+    latlong <- rbind(latlong, l)
+    Sys.sleep(.5)
+  }
+  return(latlong)
+}
+
+
+latlong <- slow(d)
